@@ -1,0 +1,126 @@
+package com.niit.DAOImplClasses;
+
+import com.niit.DAOInterfaces.IUser;
+import com.niit.DBConnection;
+import com.niit.Model.User;
+import java.sql.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class UserImpl implements IUser {
+    public UserImpl() {}
+
+    Scanner s = new Scanner(System.in);
+    User u = new User();
+
+
+    @Override
+    public void create_Userid() {
+        try {
+            Connection con = DBConnection.getConnection();
+            System.out.println(" Create Your User ID");
+            u.setU_ID(s.nextInt());
+            System.out.println(" Enter Your MobileNo");
+            u.setU_MobileNo(s.next());
+            String pattern="^[789][0-9]{9}$";
+            Pattern pt =Pattern.compile(pattern);
+            Matcher m = pt.matcher(u.getU_MobileNo());
+            if (m.find()) {
+                System.out.println(" Enter Your Password");
+                u.setU_Password(s.next());
+                String pattern1 = "^[A-Z|a-z|0-9]{6,20}$";
+                Pattern pt1 = Pattern.compile(pattern1);
+                Matcher m1 = pt1.matcher(u.getU_Password());
+
+                if (m1.find()) {
+                    System.out.println(" Confirm Password");
+                    String pass = s.next();
+                    String query1 = "insert into Useer4 values(?,?,?)";
+                    PreparedStatement pus = con.prepareStatement(query1);
+                    pus.setInt(1, u.getU_ID());
+                    pus.setString(2, u.getU_Password());
+                    pus.setString(3, u.getU_MobileNo());
+                    pus.executeUpdate();
+                    System.out.println("Your Account has been Created successfully");
+                    System.out.println("Your UserID is ---"+ u.getU_ID()+"\t Your Password is----"+pass+"\n");
+                } else {
+                    System.out.println("Password Doesn't Match the Required Pattern.Please Re-Enter Your Details");
+                    create_Userid();
+                }
+            }else{
+                System.out.println("Invalid Mobile Number");
+                create_Userid();
+            }
+            } catch (Exception e){
+            System.out.println("ERROR : In Creating Account!!!"+e);
+        }
+    }
+    public void edit_User() throws SQLException {
+
+        Connection con = DBConnection.getConnection();
+        System.out.println("Enter Your User_Id");
+        String id = s.next();
+        System.out.println("Choose Option " );
+        System.out.println("1.Change password ");
+        System.out.println("2.Change MobileNo");
+        int choice = s.nextInt();
+        switch (choice) {
+            case 1:
+                System.out.println("Enter New Password");
+                u.setU_Password(s.next());
+                System.out.println("Confirm New Password");
+                String pass = s.next();
+                String pattern="^[A-Z|a-z|0-9]{6,20}$";
+                Pattern pt=Pattern.compile(pattern);
+                Matcher m=pt.matcher(pass);
+                if (m.find()) {
+                    String query = "update User4 set U_Password=" + "'" + pass + "'" + " where U_Id=" + id;
+                    Statement st = con.createStatement();
+                    st.executeUpdate(query);
+                } else {
+                    System.out.println("Password Doesn't Match the Required Pattern .Try Again");
+                    edit_User();
+                }
+                break;
+            case 2:
+                System.out.println("Enter New MobileNo");
+                u.setU_MobileNo(s.next());
+                System.out.println("ReEnter New MobileNo");
+                String mobile = s.next();
+                String pattern1 ="^[789][0-9]{9}$";
+                Pattern pt1 =Pattern.compile(pattern1);
+                Matcher mt=pt1.matcher(mobile);
+                if (mt.find()) {
+                    String q = "Update User4 set U_MobileNo=" + mobile + " where U_Id=" + id;
+                    Statement st = con.createStatement();
+                    st.executeUpdate(q);
+                } else {
+                    System.out.println("Mobile Number Doesn't Match the Required Pattern. Please Try Again");
+                    edit_User();
+                }
+                break;
+            default:
+                System.out.println("Choose Correct Option");
+        }
+    }
+
+    //@Override
+    public boolean LogIn(int userId, String password) throws SQLException {
+        {
+            Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement("select * from Useer4 where U_Id=? and U_Password=? ");
+            ps.setInt(1, userId);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                rs.close();
+                ps.close();
+                return true;
+            }
+            rs.close();
+            ps.close();
+            return false;
+        }
+    }
+}

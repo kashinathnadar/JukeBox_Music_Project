@@ -1,0 +1,102 @@
+package com.niit.DAOImplClasses;
+
+import com.niit.DAOInterfaces.IPlaylist;
+import com.niit.DBConnection;
+import com.niit.Model.Playlist;
+import com.niit.Model.Podcast;
+import com.niit.Model.Song;
+
+
+import java.sql.*;
+import java.util.*;
+
+public class Playlist_impl implements IPlaylist
+{
+    Scanner s=new Scanner(System.in);
+    Playlist pl=new Playlist();
+    Song so=new Song();
+    Podcast pd=new Podcast();
+    Connection con= DBConnection.getConnection();
+
+    public Playlist_impl() throws SQLException {
+    }
+
+    @Override
+    public void create_Playlist(int id) throws SQLException {
+        System.out.println("Create New PlayList");
+        System.out.println("Enter PlayList Name");
+        pl.setPl_Name(s.next());
+        System.out.println("\n   Your Playlist Created Successfully     \n");
+        System.out.println();
+        String q="insert into Playlistt1 (Pl_Name,U_Id) values (?,?)";
+        PreparedStatement ps= con.prepareStatement(q);
+        //ps.setInt(1,pl.getPl_Id());
+        ps.setString(1,pl.getPl_Name());
+        ps.setInt(2,id);
+        ps.execute();
+
+    }
+
+    @Override
+    public void delete_Playlist() throws SQLException {
+
+        System.out.println("Enter Your PlaylistId");
+        pl.setPl_Id(s.nextInt());
+        System.out.println("Select option ");
+        System.out.println("1. Delete Playlist Songs ");
+        System.out.println("2. Delete Playlist Podcast");
+        int choice= s.nextInt();
+        switch (choice)
+        {
+            case 1:
+                System.out.println("Enter SongId you want to delete");
+                so.setS_Id(Integer.parseInt(s.next()));
+                String del = "delete from PlaylistDetailss1 where S_Id="+so.getS_Id();
+                Statement st= con.createStatement();
+                st.executeUpdate(del);
+                System.out.println("Song has been Removed From Playlist Successfully");
+                break;
+
+            case 2:
+                System.out.println("Enter PodcastId you want to delete");
+                pd.setP_Id(Integer.parseInt(s.next()));
+                String del1="delete from PlaylistDetailss1 where P_Id="+pd.getP_Id();
+                Statement st1= con.createStatement();
+                st1.executeUpdate(del1);
+                System.out.println(" Your Podcast Has Been Removed From Playlist Successfully ");
+                break;
+            default:
+                System.out.println("Select other option");
+        }
+    }
+
+    @Override
+    public void addSongToPlaylist() throws SQLException {
+        Connection con=DBConnection.getConnection();
+        System.out.println("Enter PlaylistId");
+        int id = s.nextInt();
+        System.out.println("Enter SongId");
+        int son= s.nextInt();
+        String q1="insert into PlaylistDetailss1 (Pl_Id,S_Id) values (?,?)";
+        PreparedStatement ps= con.prepareStatement(q1);
+        //ps.setInt(1,pl.getPl_Id());
+        ps.setInt(1,id);
+        ps.setInt(2,son);
+        ps.execute();
+        System.out.println("Song Successfully Added to Playlist");
+    }
+    public void addPodcastToPlaylist() throws SQLException {
+        Connection con = DBConnection.getConnection();
+        System.out.println("Enter PlaylistId");
+        int id = s.nextInt();
+        System.out.println("Enter PodcastId");
+        int son = s.nextInt();
+        String q1 = "insert into PlaylistDetailss1 (Pl_Id,P_Id) values (?,?)";
+        PreparedStatement ps = con.prepareStatement(q1);
+        //ps.setInt(1,pl.getPl_Id());
+        ps.setInt(1, id);
+        ps.setInt(2, son);
+        ps.execute();
+        System.out.println("Podcast Successfully Added to Playlist");
+    }
+}

@@ -1,0 +1,104 @@
+package com.niit.DAOImplClasses;
+
+import com.niit.DAOInterfaces.IPodcast;
+import com.niit.DBConnection;
+import com.niit.Model.Podcast;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PodcastImpl implements IPodcast
+{
+
+    @Override
+    public List<Podcast> display_allPodcast()
+    {
+        List<Podcast> podList = new ArrayList<>();
+        try
+        {
+            Connection con = DBConnection.getConnection();
+            String query ="Select * from Podcastt";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next())
+            {
+                int P_Id= rs.getInt(1);
+                String P_Name=rs.getString(2);
+                String P_Episode= rs.getString(3);
+                String P_Celebrity= rs.getString(4);
+                Time P_Duration= rs.getTime(5);
+                String P_Path= rs.getString(6);
+                Podcast p =new Podcast(P_Id,P_Name,P_Episode,P_Celebrity,P_Duration,P_Path);
+                podList.add(p);
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println("ERROR :: in Displaying Podcast"+e);
+        }
+        return podList;
+    }
+
+    @Override
+    public List<Podcast> sort_PodcastName()
+    {
+        List<Podcast> podcastList =new ArrayList<>();
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "Select * from Podcastt order by P_Celebrity";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                int P_Id = rs.getInt(1);
+                String P_Name = rs.getString(2);
+                String P_Episode = rs.getString(3);
+                String P_Celebrity = rs.getString(4);
+                Time P_Duration = rs.getTime(5);
+                String P_Path = rs.getString(6);
+                Podcast p = new Podcast(P_Id, P_Name, P_Episode, P_Celebrity, P_Duration, P_Path);
+                podcastList.add(p);
+            }
+        }
+        catch (Exception e1)
+        {
+            System.out.println("ERROR :: In Sorting Podcast"+e1);
+        }
+        return podcastList;
+    }
+
+
+    @Override
+    public List<Podcast> search_ForCelebrity(String Celebrity) {
+        List<Podcast> podcastList =new ArrayList<>();
+        List<Podcast> searchedPodcastList = new ArrayList<>();
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "Select * from Podcastt order by P_Celebrity";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                int P_Id = rs.getInt(1);
+                String P_Name = rs.getString(2);
+                String P_Episode = rs.getString(3);
+                String P_Celebrity = rs.getString(4);
+                Time P_Duration = rs.getTime(5);
+                String P_Path = rs.getString(6);
+                Podcast p = new Podcast(P_Id, P_Name, P_Episode, P_Celebrity, P_Duration, P_Path);
+                podcastList.add(p);
+            }
+            for (Podcast p:podcastList)
+            {
+                if (p.getP_Celebrity().equals(Celebrity))
+                {
+                    searchedPodcastList.add(p);
+                }
+            }
+        }
+        catch (Exception e1)
+        {
+            System.out.println("ERROR :: In Searching Podcast"+e1);
+        }
+        return searchedPodcastList;
+    }
+}

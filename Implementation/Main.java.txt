@@ -1,0 +1,56 @@
+package com.niit;
+
+import com.niit.DAOImplClasses.*;
+import com.niit.Model.Podcast;
+
+import java.util.*;
+
+public class Main
+{
+
+    public static void main(String[] args) throws Exception
+    {
+        try
+        {
+            Scanner s = new Scanner(System.in);
+            UserImpl user=new UserImpl();
+            SongImpl song=new SongImpl();
+            Playlist_impl playlist_impl=new Playlist_impl();
+            PodcastImpl podcast=new PodcastImpl();
+            PlaylistDetailsImpl playlistDetails=new PlaylistDetailsImpl();
+
+
+            while (true)
+            {
+                System.out.println();
+                System.out.println("-----------Welcome to JUKEBOX-------------");
+                System.out.println("1.New User");
+                System.out.println("2.Existing User");
+                System.out.println("3.Edit User");
+                System.out.println("4.Exit");
+                int choice = s.nextInt();
+                switch (choice)
+                {
+                    case 1:
+                        user.create_Userid();
+                        break;
+                    case 2:
+                        playlistDetails.operation();
+                        break;
+                    case 3:
+                        user.edit_User();
+                        break;
+                    case 4:
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Invalid Choice :(");
+                }
+            }
+        }catch (Exception e)
+        {
+            System.out.println("ERROR :: In The Login"+e);
+        }
+
+    }
+}

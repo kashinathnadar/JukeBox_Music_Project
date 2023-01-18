@@ -1,0 +1,38 @@
+package com.niit.DAOImplClasses;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class SongImplTest {
+    SongImpl b=null;
+
+
+    @BeforeEach
+    public void setUp() throws  SQLException{
+        b= new SongImpl();
+    }
+    @AfterEach
+    public void tearDown()
+    {
+        b=null;
+    }
+
+    @Test
+    public void display_allSong()
+    {
+        assertEquals(10,b.display_allSong().size());
+    }
+
+    @Test
+   public void sort_SongName1()
+   {
+      assertEquals("Perfect",b.sort_SongName().get(1).getS_Name());
+   }
+}
+

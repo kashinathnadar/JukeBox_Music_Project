@@ -1,0 +1,249 @@
+package com.niit.DAOImplClasses;
+
+import com.niit.DAOInterfaces.IPlaylistDetails;
+import com.niit.DBConnection;
+import com.niit.Model.Podcast;
+import com.niit.Model.Song;
+import com.niit.PlayAudio;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+
+public class PlaylistDetailsImpl implements IPlaylistDetails {
+
+    Scanner s=new Scanner(System.in);           Playlist_impl playlist=new Playlist_impl();
+
+    UserImpl user=new UserImpl();               SongImpl songimpl=new SongImpl();
+
+    PodcastImpl podcast=new PodcastImpl();      PodcastImpl podcastList=new PodcastImpl();
+
+    List<Song> sonList=new ArrayList<>();      List<Podcast> podList=new ArrayList<>();
+    int user1;      String p1;
+    Connection con= DBConnection.getConnection();
+
+    public PlaylistDetailsImpl() throws SQLException {
+    }
+
+    @Override
+    public void operation() throws Exception {
+
+        System.out.println("Enter  UserId");
+        int id=s.nextInt();
+        System.out.println("Enter password");
+        String pass=s.next();
+        String query="select U_Id from Useer4 where U_Id="+id;
+        Statement st=con.createStatement();
+        ResultSet rs=st.executeQuery(query);
+        while (rs.next())
+        {
+            user1=rs.getInt("U_Id");
+        }
+        String query1="select U_Password from Useer4 where U_Id="+id;
+        ResultSet rs1=st.executeQuery(query1);
+        while (rs1.next())
+        {
+            p1=rs1.getString("U_Password");
+        }
+        if(user.LogIn(id,pass)==true) {
+            System.out.println("Login Successful");
+            while (true) {
+                System.out.println("1. Create PlayList ");  System.out.println("2. Display Song ");
+                System.out.println("3. Display Podcast ");      System.out.println("4. Delete Song/Podcast From PlayList ");
+                System.out.println("5. Add Song / Podcast To Playlist ");
+                System.out.println("6. Sort Song/Podcast");
+                System.out.println("7. Search Song/Podcast");
+                System.out.println("8. Play Playlist");
+                System.out.println("9. Exit ");
+                int ch = s.nextInt();
+                switch (ch) {
+                    case 1:
+                        playlist.create_Playlist(id);
+
+                        break;
+                    case 2:
+                        List<Song> songList=songimpl.display_allSong();
+                        songList.forEach(i-> System.out.println(i));
+                        break;
+                    case 3:
+                        List<Podcast>podList=podcast.display_allPodcast();
+                        podList.forEach((j-> System.out.println(j)));
+                        break;
+                    case 4:
+                        playlist.delete_Playlist();
+                        break;
+                    case 5:
+
+                        //System.out.println("1.Song ");
+                        System.out.println("1.Add Song to Playlist");
+                        System.out.println("2.Add Podcast to Playlist");
+                        int c=s.nextInt();
+                        if(c==1)
+                        {
+                            List<Song> songList1=songimpl.display_allSong();
+                            songList1.forEach(i-> System.out.println(i));
+                            playlist.addSongToPlaylist();
+                        }
+                        if(c==2)
+                        {
+                            List<Podcast>podList1=podcast.display_allPodcast();
+                            podList1.forEach((j-> System.out.println(j)));
+                            playlist.addPodcastToPlaylist();
+
+                        }
+                        break;
+                    case 6:
+                        System.out.println("1.Sorted Songs list");
+                        System.out.println("2.Sorted Podcast list");
+                        int i1=s.nextInt();
+                        if(i1==1)
+                        {
+                            sonList=songimpl.display_allSong();
+                            List<Song> srt=songimpl.sort_SongName();
+                            //String str=s.next().toLowerCase();
+                            for(Song x:srt)
+                            {
+                                System.out.println(x);
+                            }
+                        }
+                        if(i1==2)
+                        {
+                            podList=podcast.display_allPodcast();
+                            List<Podcast> prt=podcastList.sort_PodcastName();
+                            //String stri=s.next().toLowerCase();
+                            for(Podcast x:prt)
+                            {
+                                System.out.println(x);
+                            }
+                        }
+                        break;
+                    case 7:
+                        System.out.println("1.Search Songs list");
+                        System.out.println("2.Search Podcast list");
+                        int i2=s.nextInt();
+                        if(i2==1)
+                        {
+                            System.out.println("Enter Genre You want to Search");
+                            String  b= s.next();
+                            //String b1=s.next().toLowerCase();
+                            List<Song> srt2=songimpl.search_ForGenre(b);
+                            for(Song x:srt2)
+                            {
+                                System.out.println(x);
+                            }
+                        }
+                        if(i2==2)
+                        {
+                            System.out.println("Enter Celebrity You want to Search");
+                            String d = s.next();
+                            List<Podcast> srt3=podcast.search_ForCelebrity(d);
+                            //String d1=s.next().toLowerCase();
+                            for(Podcast x:srt3)
+                            {
+                                System.out.println(x);
+                            }
+                        }
+                        break;
+                    case 8:
+                        System.out.println("  Select the choice");
+                        System.out.println("1.Song ");
+                        System.out.println("2.Podcast ");;
+                        int chc= s.nextInt();
+                        if(chc==1)
+                        {
+                            String path="";
+                            System.out.println(" Enter SongId To Play ");
+                            String sid=s.next();
+                            String query2="select S_Path from Songg where S_Id="+"'"+sid+"'";
+                            Statement stt= con.createStatement();
+                            ResultSet rr=stt.executeQuery(query2);
+                            while(rr.next())
+                            {
+                                path=rr.getString("S_Path");
+                            }
+                            readAudio(path,2);
+                        }
+                        if(chc==2)
+                        {
+                            String s2="";
+                            System.out.println(" Enter PodcastId To Play ");
+                            String pid=s.next();
+                            String query3="select P_Path from Podcastt where P_Id="+"'"+pid+"'";
+                            Statement stt=con.createStatement();
+                            ResultSet r= stt.executeQuery(query3);
+                            while(r.next())
+                            {
+                                s2=r.getString("P_Path");
+                            }
+                            readAudio(s2,2);
+                        }
+
+                        break;
+                    case 9:
+                        System.exit(0);
+                        break;
+
+                    default:
+                        System.out.println("Choose correct Option");
+                }
+
+            }
+        }
+        else {
+            System.out.println("User Id and Password Not match. Please Login Again");
+            operation();
+        }
+
+    }
+
+    public void readAudio(String audioSrcFile, int count) {
+        PlayAudio playAudio = new PlayAudio();
+        int c = 0;
+        count = count-1;
+        try {
+
+            playAudio.playAudio1(audioSrcFile,count);
+
+            playAudio.play();
+            Scanner scanner = new Scanner(System.in);
+            while (true)
+            {
+
+                System.out.println();
+                System.out.println("1. pause");
+                System.out.println("2. resume");
+                System.out.println("3.restart");
+                System.out.println("4.stop");
+                System.out.println();
+                if (c == 4) {
+                    break;
+                }
+
+                if (scanner.hasNextInt()) {
+                    c = scanner.nextInt();
+                } else {
+                    break;
+                }
+                switch (c) {
+                    case 1:
+                        playAudio.pause();
+                        break;
+                    case 2:
+                        playAudio.resumeAudio();
+                        break;
+                    case 3:
+                        playAudio.restart();
+                        break;
+                    case 4:
+                        playAudio.stop();
+                        break;
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound." + ex);
+        }
+    }
+
+}

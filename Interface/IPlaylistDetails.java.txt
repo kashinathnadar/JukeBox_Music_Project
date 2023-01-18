@@ -1,0 +1,14 @@
+package com.niit.DAOInterfaces;
+
+import com.niit.DAOImplClasses.PlaylistDetailsImpl;
+import com.niit.Model.PlaylistDetails;
+import com.niit.Model.Podcast;
+import com.niit.Model.Song;
+
+import java.util.List;
+
+public interface IPlaylistDetails {
+    public void operation() throws Exception;
+
+
+}
