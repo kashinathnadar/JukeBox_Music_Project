@@ -1,0 +1,52 @@
+package com.niit.Model;
+
+public class PlaylistDetails {
+
+
+    private int Pl_Id;
+
+    private int S_Id;
+
+    private int P_Id;
+
+    public PlaylistDetails(int pl_Id, int s_Id, int p_Id) {
+        Pl_Id = pl_Id;
+        S_Id = s_Id;
+        P_Id = p_Id;
+    }
+
+
+    public int getPl_Id() {
+        return Pl_Id;
+    }
+
+    public void setPl_Id(int pl_Id) {
+        Pl_Id = pl_Id;
+    }
+
+    public int getS_Id() {
+        return S_Id;
+    }
+
+    public void setS_Id(int s_Id) {
+        S_Id = s_Id;
+    }
+
+    public int getP_Id() {
+        return P_Id;
+    }
+
+    public void setP_Id(int p_Id) {
+        P_Id = p_Id;
+    }
+
+    @Override
+    public String
+    toString() {
+        return "PlaylistDetails{" +
+                "Pl_Id=" + Pl_Id +
+                ", S_Id=" + S_Id +
+                ", P_Id=" + P_Id +
+                '}';
+    }
+}

@@ -1,0 +1,84 @@
+package com.niit.Model;
+
+import java.sql.Time;
+
+public class Song {
+
+
+    private int S_Id;
+
+    private String S_Name;
+
+    private String S_Genre;
+
+    private String S_Artist;
+
+    private Time S_Duration;
+
+    private String S_Path;
+
+
+    public Song() {
+        int s_Id=0;
+        S_Id = s_Id;
+        String s_Name=null;
+        S_Name = s_Name;
+        String s_Genre = null;
+        S_Genre = s_Genre;
+        String s_Artist =null;
+        S_Artist = s_Artist;
+        Time s_Duration= null;
+        S_Duration = s_Duration;
+        String s_Path =null;
+        S_Path = s_Path;
+    }
+
+    public Song(int s_id, String s_name, String s_genre, String s_artist, Time s_duration, String s_filepath) {
+        this.S_Id=s_id;
+        this.S_Name=s_name;
+        this.S_Genre=s_genre;
+        this.S_Artist=s_artist;
+        this.S_Duration=s_duration;
+        this.S_Path=s_filepath;
+    }
+
+
+    public int getS_Id() { return S_Id; }
+
+    public void setS_Id(int s_Id) { S_Id = s_Id; }
+
+    public String getS_Name() { return S_Name; }
+
+    public void setS_Name(String s_Name) { S_Name = s_Name; }
+
+    public String getS_Genre() { return S_Genre; }
+
+    public void setS_Genre(String s_Genre) { S_Genre = s_Genre; }
+
+    public String getS_Artist() { return S_Artist; }
+
+    public void setS_Artist(String s_Artist) { S_Artist = s_Artist; }
+
+    public Time getS_Duration() { return S_Duration; }
+
+    public void setS_Duration(Time s_Duration) { S_Duration = s_Duration; }
+
+    public String getS_Path() { return S_Path; }
+
+    public void setS_Path(String s_Path) { S_Path = s_Path; }
+
+    @Override
+    public String toString() {
+        return "Song{" +
+                "S_Id=" + S_Id +
+                ", S_Name='" + S_Name + '\'' +
+                ", S_Genre='" + S_Genre + '\'' +
+                ", S_Artist='" + S_Artist + '\'' +
+                ", S_Duration=" + S_Duration +
+                ", S_Path='" + S_Path + '\'' +
+                '}';
+    }
+
+    private class time {
+    }
+}

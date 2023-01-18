@@ -1,0 +1,104 @@
+package com.niit.DAOImplClasses;
+
+import com.niit.DAOInterfaces.ISong;
+import com.niit.DBConnection;
+import com.niit.Model.Song;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SongImpl implements ISong
+{
+
+    @Override
+    public List<Song> display_allSong()
+    {
+        List<Song> sonList = new ArrayList<>();
+        System.out.println("List Of Songs");
+        try
+        {
+            Connection con = DBConnection.getConnection();
+            String query= "select * from Songg";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next())
+            {
+                Song sobj =new Song(rs.getInt(1), rs.getString(2), rs.getString(3),
+                        rs.getString(4), rs.getTime(5),rs.getString(6));
+                sonList.add(sobj);
+            }
+        }catch (Exception e){
+            System.out.println("ERROR :: In the Song1"+e);
+        }
+        return sonList;
+    }
+
+    @Override
+    public List<Song> sort_SongName()
+    {
+        List<Song> songList = new ArrayList<>();
+        try
+        {
+            Connection con = DBConnection.getConnection();
+            String query = "select * from Songg order by S_Artist";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next())
+            {
+                int S_Id= rs.getInt(1);
+                String S_Name =rs.getString(2);
+                String S_Genre =rs.getString(3);
+                String S_Artist =rs.getString(4);
+                Time S_Duration =rs.getTime(5);
+                String S_Path =rs.getString(6);
+                Song obj =new Song(S_Id,S_Name,S_Genre,S_Artist,S_Duration,S_Path);
+                songList.add(obj);
+            }
+            //songList.forEach(a->a.getS_Artist().e);
+        }
+        catch(Exception e1)
+        {
+            System.out.println("ERROR :: In Sorting Song!!"+e1);
+        }
+        return songList;
+    }
+
+    @Override
+    public List<Song> search_ForGenre(String Genre) {
+        List<Song> songList = new ArrayList<>();
+        List<Song> searchedSongList = new ArrayList<>();
+        try
+        {
+            Connection con = DBConnection.getConnection();
+            String query = "select * from Songg order by S_Artist";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next())
+            {
+                int S_Id= rs.getInt(1);
+                String S_Name =rs.getString(2);
+                String S_Genre =rs.getString(3);
+                String S_Artist =rs.getString(4);
+                Time S_Duration =rs.getTime(5);
+                String S_Path =rs.getString(6);
+                Song obj =new Song(S_Id,S_Name,S_Genre,S_Artist,S_Duration,S_Path);
+                songList.add(obj);
+            }
+
+            for (Song s:songList)
+            {
+                if (s.getS_Genre().equals(Genre))
+                {
+                    searchedSongList.add(s);
+                }
+            }
+            //songList.forEach(a->a.getS_Artist().e);
+        }
+        catch(Exception e1)
+        {
+            System.out.println("ERROR :: In Sorting Song!!"+e1);
+        }
+        return searchedSongList;
+    }
+}
